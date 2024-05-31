@@ -94,7 +94,7 @@
   <ItemGroup>
     <Reference Include="DarkUI, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\FanCtrl_private\dll\DarkUI.dll</HintPath>
+      <HintPath>dll\DarkUI.dll</HintPath>
     </Reference>
     <Reference Include="HidSharp, Version=2.1.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -451,28 +451,34 @@
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>copy /Y "$(SolutionDir)dll\*.*" "$(TargetDir)"
-mkdir "$(TargetDir)\plugin"
+
+if NOT EXIST "$(TargetDir)\plugin" mkdir "$(TargetDir)\plugin"
 copy /Y "$(SolutionDir)plugin\*.*" "$(TargetDir)plugin"
-mkdir "$(TargetDir)\preset"
+
+if NOT EXIST "$(TargetDir)\preset" mkdir "$(TargetDir)\preset"
 copy /Y "$(SolutionDir)preset\*.*" "$(TargetDir)preset"
-mkdir "$(TargetDir)locale"
-mkdir "$(TargetDir)locale\fr"
-mkdir "$(TargetDir)locale\ja"
-mkdir "$(TargetDir)locale\ko"
-mkdir "$(TargetDir)locale\es"
-mkdir "$(TargetDir)locale\ru"
+
+if NOT EXIST "$(TargetDir)locale" mkdir "$(TargetDir)locale"
+if NOT EXIST "$(TargetDir)locale\es" mkdir "$(TargetDir)locale\es"
+if NOT EXIST "$(TargetDir)locale\fr" mkdir "$(TargetDir)locale\fr"
+if NOT EXIST "$(TargetDir)locale\ja" mkdir "$(TargetDir)locale\ja"
+if NOT EXIST "$(TargetDir)locale\ko" mkdir "$(TargetDir)locale\ko"
+if NOT EXIST "$(TargetDir)locale\ru" mkdir "$(TargetDir)locale\ru"
+copy /Y "$(TargetDir)es\*.*" "$(TargetDir)locale\es"
 copy /Y "$(TargetDir)fr\*.*" "$(TargetDir)locale\fr"
 copy /Y "$(TargetDir)ja\*.*" "$(TargetDir)locale\ja"
 copy /Y "$(TargetDir)ko\*.*" "$(TargetDir)locale\ko"
-copy /Y "$(TargetDir)es\*.*" "$(TargetDir)locale\es"
 copy /Y "$(TargetDir)ru\*.*" "$(TargetDir)locale\ru"
-timeout 1 &gt; NUL
-rmdir /S /Q "$(TargetDir)fr"
-rmdir /S /Q "$(TargetDir)ja"
-rmdir /S /Q "$(TargetDir)ko"
-rmdir /S /Q "$(TargetDir)es"
-rmdir /S /Q "$(TargetDir)ru"
-del $(TargetName).pdb</PostBuildEvent>
+
+@rem timeout /T 1
+
+if EXIST "$(TargetDir)es" rmdir /S /Q "$(TargetDir)es"
+if EXIST "$(TargetDir)fr" rmdir /S /Q "$(TargetDir)fr"
+if EXIST "$(TargetDir)ja" rmdir /S /Q "$(TargetDir)ja"
+if EXIST "$(TargetDir)ko" rmdir /S /Q "$(TargetDir)ko"
+if EXIST "$(TargetDir)ru" rmdir /S /Q "$(TargetDir)ru"
+if EXIST "$(TargetName).pdb" del "$(TargetName).pdb"
+</PostBuildEvent>
   </PropertyGroup>
   <PropertyGroup>
     <PreBuildEvent>del /S /Q "$(TargetDir)*.dll"
